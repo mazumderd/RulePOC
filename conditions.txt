@@ -1,0 +1,63 @@
+//Complexity: How to creat rules with dependent conditions
+//Eg: 
+//1. condition 2 will only be executed if state of condition 1 is Pass
+
+{
+  "encryption": {
+
+  		"config": {
+  					"condition1":{
+  						 "desc": "Is  encryption Configured or <like definition generated from the  condition rego file>",
+  						 "import":  "data.example.s3.config",
+  			         	 "key":  "s3.config_allowed"
+  					},
+  					"condition2":{
+  						 "desc": "Encryption not configured",
+  						 "import":  "data.example.s3.config",
+  			         	 "key":  "s3.config_not_allowed"
+  					}
+  			        
+  			       },  
+  		"algorithm": {
+  					"condition1":{
+  						"desc": "Is encryption algorithm AES-256 or AWS-KMS",
+  						"import":  "data.example.s3.algorithm",
+  						"key":"s3.encryption_algorithm_allowed"
+  					},
+  					"condition2":{
+  						"desc": "Is encryption algorithm AES-256 or AWS-KMS",
+  						"import":  "data.example.s3.algorithm",
+  						"key":"s3.encryption_algorithm_not-allowed"
+  					}
+  					
+  				}
+
+ }
+
+
+
+ {
+ 	"i/p":{
+ 			"state":{
+ 				//All the states are else seperated in the code
+ 				"allowed": [
+ 					[ "config.condition1" , "algorithm.condition1" ] //config.condition1 and  algorithm.condition1
+ 				],
+ 				"partially allowed":[
+ 					["config.condition1 and algorithm.condition2"]//config.condition1 and  algorithm.condition2
+ 				],
+ 				"fail":[
+ 					["config.condition2"]
+ 				]
+ 			},
+ 			"severeness":{
+ 				"high":[],
+ 				"critical":[],
+ 				"low":[],
+ 				"none":[]
+ 			}
+ }
+}
+
+
+
